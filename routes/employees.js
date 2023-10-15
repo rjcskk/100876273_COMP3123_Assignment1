@@ -1,65 +1,58 @@
-const express = require("express")
-const BookModel = require('../models/Books')
+const express = require("express");
+const router = express.Router();
+const EmployeeModel = require('../models/Employees'); 
 
-const routes = express.Router()
-
-//Get All Books
-routes.get("/books", async(req, res) => {
-    try{
-        const bookList = await BookModel.find({})
-        res.status(200).send(bookList)
-    }catch(error) {
-        res.status(500).send(error)
+// Employee List
+router.get("/employees", async (req, res) => {
+    try {
+        const employeeList = await EmployeeModel.find({});
+        res.status(200).send(employeeList);
+    } catch (error) {
+        res.status(500).send(error);
     }
-    //res.send({message: "Get All Books"})
-})
+});
 
-//Add NEW Book
-routes.post("/books", async (req, res) => {
-    try{
-        const newBook = new BookModel({
-            ...req.body
-        })
-        await newBook.save()
-        res.status(200).send(newBook)
-
-    }catch(error) {
-        res.status(500).send(error)
+// Create Employee
+router.post("/employees", async (req, res) => {
+    try {
+        const newEmployee = new EmployeeModel({ ...req.body });
+        await newEmployee.save();
+        res.status(201).send(newEmployee);
+    } catch (error) {
+        res.status(500).send(error);
     }
-    //res.send({message: "Add NEW Book"})
-})
+});
 
-//Update existing Book By Id
-routes.post("/book/:bookid", (req, res) => {
-    res.send({message: "Update existing Book By Id"})
-})
-
-//Delete Book By ID
-routes.delete("/book/:bookid", async (req, res) => {
-    try{
-        // const book = await BookModel.deleteOne({_id : req.params.bookid})
-        const book = await BookModel.findOneAndDelete(req.params.bookid)
-        if(!book){
-            res.status(200).send({message: "Book Not Found"})
-        }else{
-            res.status(200).send(book)
+// Get Employee
+router.get("/employees/:eid", async (req, res) => {
+    try {
+        const employee = await EmployeeModel.findById(req.params.eid);
+        if (!employee) {
+            res.status(404).send("Employee not found");
+        } else {
+            res.status(200).send(employee);
         }
-    }catch(error) {
-        res.status(500).send(error)
+    } catch (error) {
+        res.status(500).send(error);
     }
-    // res.send({message: "Delete Book By ID"})
-})
+});
 
-//Get Book By ID
-routes.get("/book/:bookid", async (req, res) => {
-    // https://mongoosejs.com/docs/models.html#querying for referencing
-    // res.send({message: "Get Book By ID"})
-    
-})
+// Update Employee
+router.put("/employees/:eid", async (req, res) => {
+    try {
+        res.status(200).send("Employee details updated.");
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
-//Get All Books in sorted order
-routes.get("/books/sort", (req, res) => {
-    res.send({message: "Get All Books in sorted order"})
-})
 
-module.exports = routes
+router.delete("/employees", async (req, res) => {
+    try {
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+module.exports = router;

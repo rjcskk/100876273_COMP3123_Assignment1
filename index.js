@@ -1,28 +1,30 @@
-const express = require("express")
-const booksRoutes = require("./routes/books")
-const mongoose = require('mongoose')
+const express = require("express");
+const employeesRoutes = require("./routes/employees");
+const usersRoutes = require("./routes/users");
+const mongoose = require('mongoose');
 
-const app = express()
+const app = express();
 
-const SERVER_PORT = 3001
+const SERVER_PORT = 3001;
 
-app.use(express.json())
-app.use(express.urlencoded())
-const DB_CONNECTION_STRING = "mongodb+srv://rjcsebkk:lFzJfReN146LgWb8@cluster0.6bv7pci.mongodb.net/comp3123?retryWrites=true&w=majority"
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(DB_CONNECTION_STRING,{
+const DB_CONNECTION_STRING = "mongodb+srv://rjcsebkk:lFzJfReN146LgWb8@cluster0.6bv7pci.mongodb.net/comp3123?retryWrites=true&w=majority";
+
+mongoose.connect(DB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
+});
 
+app.use("/api/v1/emp", employeesRoutes);
 
-app.use("/library", booksRoutes)
+app.use("/api/v1/user", usersRoutes);
 
-app.route("/")
-    .get((req, res) => {
-        res.send("<h1>MogoDB + Mongoose Example</h1>")
-    })
+app.get("/", (req, res) => {
+    res.send("<h1>MongoDB + Mongoose Example</h1>");
+});
 
-app.listen(SERVER_PORT, () =>{
-    console.log(`Server running at http://localhost:${SERVER_PORT}/`)
-})
+app.listen(SERVER_PORT, () => {
+    console.log(`Server running at http://localhost:${SERVER_PORT}/`);
+});
